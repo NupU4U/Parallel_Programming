@@ -1,0 +1,46 @@
+// solver/dfs.cpp
+#include "dfs.hpp"
+#include <stack>
+
+std::vector<std::vector<char>> DFS::solveDFS(const std::vector<std::vector<char>>& maze, int rank, int size) {
+    int rows = maze.size();
+    int cols = maze[0].size();
+    std::vector<std::vector<char>> solvedMaze = maze;
+
+    std::stack<std::pair<int, int>> stack;
+    stack.push({0, cols - 1}); // Start from the top right corner
+    solvedMaze[0][cols - 1] = 'S'; // Mark start cell
+
+    // DFS traversal
+    while (!stack.empty()) {
+        int r = stack.top().first;
+        int c = stack.top().second;
+        stack.pop();
+	//std::cout<<"r: "<<r<<" c: "<<c<<std::endl;
+        // Explore neighbors
+        if (r == rows - 1 && c == 0) {
+            // Reached the exit
+            solvedMaze[r][c] = 'E'; // Mark exit cell
+            break;
+        }
+
+        if (r - 1 >= 0 && solvedMaze[r - 1][c] == ' ') {
+            stack.push({r - 1, c});
+            solvedMaze[r - 1][c] = 'P'; // Mark path cell
+        }
+        if (r + 1 < rows && solvedMaze[r + 1][c] == ' ') {
+            stack.push({r + 1, c});
+            solvedMaze[r + 1][c] = 'P'; // Mark path cell
+        }
+        if (c - 1 >= 0 && solvedMaze[r][c - 1] == ' ') {
+            stack.push({r, c - 1});
+            solvedMaze[r][c - 1] = 'P'; // Mark path cell
+        }
+        if (c + 1 < cols && solvedMaze[r][c + 1] == ' ') {
+            stack.push({r, c + 1});
+            solvedMaze[r][c + 1] = 'P'; // Mark path cell
+        }
+    }
+
+    return solvedMaze;
+}
